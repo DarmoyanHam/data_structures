@@ -17,11 +17,11 @@ AVL::AVLTree<T>::AVLTree(value_type data)
 template <typename T>
 AVL::AVLTree<T>::~AVLTree()
 {
-    clear();
+    clear(root);
 }
 
 template <typename T>
-AVL::AVLTree<T>::value_type AVL::AVLTree<T>::get_height(Node_pointer node) const
+typename AVL::AVLTree<T>::value_type AVL::AVLTree<T>::get_height(Node_pointer node) const
 {
     if(!node)
     {
@@ -37,7 +37,7 @@ int AVL::AVLTree<T>::get_balance(Node_pointer node) const
 }
 
 template <typename T>
-AVL::AVLTree<T>::Node_pointer AVL::AVLTree<T>::right_rotation(Node_pointer node)
+typename AVL::AVLTree<T>::Node_pointer AVL::AVLTree<T>::right_rotation(Node_pointer node)
 {
     Node_pointer x = node->left;
     Node_pointer tmp = x->right;
@@ -49,7 +49,7 @@ AVL::AVLTree<T>::Node_pointer AVL::AVLTree<T>::right_rotation(Node_pointer node)
 }
 
 template <typename T>
-AVL::AVLTree<T>::Node_pointer AVL::AVLTree<T>::left_rotation(Node_pointer node)
+typename AVL::AVLTree<T>::Node_pointer AVL::AVLTree<T>::left_rotation(Node_pointer node)
 {
     Node_pointer x = node->right;
     Node_pointer tmp = x->left;
@@ -67,17 +67,13 @@ bool AVL::AVLTree<T>::isEmpty() const
 }
 
 template <typename T>
-AVL::AVLTree<T>::Node_pointer AVL::AVLTree<T>::insert(value_type data)
+void AVL::AVLTree<T>::insert(value_type data)
 {
-    if(isEmpty())
-    {
-        return new TreeNode<value_type>(data);
-    }
-    return insertHelper(root, data);
+    root = insertHelper(root, data);
 }
 
 template <typename T>
-AVL::AVLTree<T>::Node_pointer AVL::AVLTree<T>::insertHelper(Node_pointer node, value_type data)
+typename AVL::AVLTree<T>::Node_pointer AVL::AVLTree<T>::insertHelper(Node_pointer node, value_type data)
 {
     if(!node)
     {
@@ -87,7 +83,7 @@ AVL::AVLTree<T>::Node_pointer AVL::AVLTree<T>::insertHelper(Node_pointer node, v
     {
         node->left = insertHelper(node->left, data);
     }
-    else if(data > node->right)
+    else if(data > node->right->data)
     {
         node->right = insertHelper(node->right, data);
     }
@@ -116,6 +112,8 @@ AVL::AVLTree<T>::Node_pointer AVL::AVLTree<T>::insertHelper(Node_pointer node, v
         node->right = right_rotation(node->right);
         return left_rotation(node);
     }
+
+    return node;
 }
 
 template <typename T>
@@ -129,7 +127,7 @@ void AVL::AVLTree<T>::remove(value_type data)
 }
 
 template <typename T>
-AVL::AVLTree<T>::Node_pointer AVL::AVLTree<T>::removeHelper(Node_pointer node, value_type data)
+typename AVL::AVLTree<T>::Node_pointer AVL::AVLTree<T>::removeHelper(Node_pointer node, value_type data)
 {
     if(!node)
     {
@@ -157,7 +155,7 @@ AVL::AVLTree<T>::Node_pointer AVL::AVLTree<T>::removeHelper(Node_pointer node, v
         {
             value_type min = findMinHelper(node->right);
             node->data = min;
-            node->right = removeHelper(node->right);
+            node->right = removeHelper(node->right, min);
         }
     }
 
@@ -191,7 +189,7 @@ AVL::AVLTree<T>::Node_pointer AVL::AVLTree<T>::removeHelper(Node_pointer node, v
 }
 
 template <typename T>
-AVL::AVLTree<T>::Node_pointer AVL::AVLTree<T>::find(value_type data) const
+typename AVL::AVLTree<T>::Node_pointer AVL::AVLTree<T>::find(value_type data) const
 {
     if(!root)
     {
@@ -201,7 +199,7 @@ AVL::AVLTree<T>::Node_pointer AVL::AVLTree<T>::find(value_type data) const
 }
 
 template <typename T>
-AVL::AVLTree<T>::Node_pointer AVL::AVLTree<T>::findHelper(Node_pointer node, value_type data) const
+typename AVL::AVLTree<T>::Node_pointer AVL::AVLTree<T>::findHelper(Node_pointer node, value_type data) const
 {
     if(!node)
     {
@@ -222,7 +220,7 @@ AVL::AVLTree<T>::Node_pointer AVL::AVLTree<T>::findHelper(Node_pointer node, val
 }
 
 template <typename T>
-AVL::AVLTree<T>::value_type AVL::AVLTree<T>::findMin() const
+typename AVL::AVLTree<T>::value_type AVL::AVLTree<T>::findMin() const
 {
     if(!root)
     {
@@ -232,7 +230,7 @@ AVL::AVLTree<T>::value_type AVL::AVLTree<T>::findMin() const
 }
 
 template <typename T>
-AVL::AVLTree<T>::value_type AVL::AVLTree<T>::findMinHelper(Node_pointer node) const
+typename AVL::AVLTree<T>::value_type AVL::AVLTree<T>::findMinHelper(Node_pointer node) const
 {
     if(!node->left)
     {
