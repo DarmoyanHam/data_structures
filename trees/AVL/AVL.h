@@ -28,7 +28,7 @@ public:
 public:
     value_type get_height(Node_pointer node) const; //
     int get_balance(Node_pointer node) const; //
-    Node_pointer insert(value_type data); //
+    void insert(value_type data); //
     void remove(value_type data); //
     bool isEmpty() const; //
     value_type findMin() const; //
@@ -53,5 +53,7 @@ private:
 };
 
 }
+
+#include "AVL.hpp"
 
 #endif
