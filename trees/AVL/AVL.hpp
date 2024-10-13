@@ -145,11 +145,15 @@ typename AVL::AVLTree<T>::Node_pointer AVL::AVLTree<T>::removeHelper(Node_pointe
     {
         if(!node->left)
         {
-            return node->right;
+            Node_pointer tmp = node->right;
+            delete node;
+            return tmp;
         }
         else if(!node->right)
         {
-            return node->left;
+            Node_pointer tmp = node->left;
+            delete node;
+            return tmp;
         }
         else
         {
